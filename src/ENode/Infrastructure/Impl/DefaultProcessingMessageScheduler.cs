@@ -22,14 +22,10 @@ namespace ENode.Infrastructure
         }
         public void ScheduleMailbox(ProcessingMessageMailbox<X, Y, Z> mailbox)
         {
-            Task.Factory.StartNew(obj =>
+            if (mailbox.EnterHandlingMessage())
             {
-                var currentMailbox = obj as ProcessingMessageMailbox<X, Y, Z>;
-                if (currentMailbox.EnterHandlingMessage())
-                {
-                    Task.Factory.StartNew(currentMailbox.Run);
-                }
-            }, mailbox);
+                Task.Factory.StartNew(mailbox.Run);
+            }
         }
     }
 }
